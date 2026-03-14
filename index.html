@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProdStack · Full Color Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 1800px;
+            background: #1e293b;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            min-height: 95vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Login */
+        .login-container {
+            max-width: 400px;
+            margin: 15vh auto;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .password-field {
+            width: 100%;
+            padding: 1rem;
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #3b82f6;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #ef4444;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #2d1a1a;
+            border-radius: 50px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        .menu-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            padding: 0.5rem;
+            min-width: 250px;
+            z-index: 100;
+        }
+
+        .menu-item {
+            padding: 0.6rem 1rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            border-radius: 0.5rem;
+        }
+
+        .menu-item:hover {
+            background: #1e293b;
+            color: white;
+        }
+
+        /* Main Content - 2 Columns */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Left Column */
+        .left-column {
+            background: #0f172a;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .column-header h2 {
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        /* Main Counters - 8x4 Grid */
+        .main-counters-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .counter-card {
+            background: #1e293b;
+            border-radius: 0.8rem;
+            padding: 0.6rem 0.4rem;
+            border: 2px solid;
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            min-height: 110px;
+        }
+
+        .counter-name {
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            word-break: break-word;
+            line-height: 1.2;
+            max-height: 2.4em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 0.2rem;
+        }
+
+        .counter-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0.1rem 0;
+            color: white;
+        }
+
+        .btn-plus, .btn-minus {
+            width: 100%;
+            padding: 0.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.1rem 0;
+        }
+
+        .btn-plus {
+            background: #3b82f6;
+        }
+
+        .btn-minus {
+            background: #f97316;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 0.2rem;
+        }
+
+        .btn-reset, .btn-delete, .btn-edit {
+            flex: 1;
+            padding: 0.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .btn-edit:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Right Column */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: #0f172a;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+        }
+
+        .chart-container {
+            margin-top: 1rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .chart-label {
+            width: 100px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .chart-progress {
+            flex: 1;
+            height: 20px;
+            background: #1e293b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+
+        .chart-value {
+            width: 45px;
+            color: white;
+            text-align: right;
+        }
+
+        /* Optional Section - 5 EDITABLE COUNTERS */
+        .optional-section {
+            background: #0f172a;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+        }
+
+        .optional-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .optional-header h2 {
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        .optional-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .optional-controls input {
+            padding: 0.4rem 0.8rem;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 50px;
+            color: white;
+            width: 150px;
+        }
+
+        .optional-controls button {
+            padding: 0.4rem 1rem;
+            background: #3b82f6;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 5 EDITABLE COUNTERS GRID */
+        .optional-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .optional-item {
+            background: #1e293b;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .optional-item .counter-name {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            color: white;
+            word-break: break-word;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .optional-item .counter-value {
+            font-size: 1.5rem;
+            margin: 0.2rem 0;
+            color: white;
+        }
+
+        .optional-item .btn-plus,
+        .optional-item .btn-minus {
+            padding: 0.2rem;
+            font-size: 0.9rem;
+            margin: 0.1rem 0;
+        }
+
+        .optional-actions {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 0.3rem;
+        }
+
+        .optional-actions button {
+            flex: 1;
+            padding: 0.2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .optional-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .optional-color {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .optional-reset {
+            background: #f59e0b;
+            color: white;
+        }
+
+        /* Notes Popup */
+        .notes-popup-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+        }
+
+        .notes-bubble {
+            background: #3b82f6;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .notes-popup {
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 350px;
+            background: #0f172a;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            transform: translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .notes-popup.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .notes-tabs {
+            display: flex;
+            gap: 0.3rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .note-tab {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .note-tab.active {
+            background: #334155;
+            color: white;
+        }
+
+        .note-editor textarea {
+            width: 100%;
+            height: 150px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            color: white;
+            resize: none;
+        }
+
+        .add-note-btn {
+            background: #1e293b;
+            border: 1px dashed #475569;
+            color: #94a3b8;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .color-swatch {
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-swatch.selected {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            color: white;
+        }
+
+        .stats-section {
+            background: #0f172a;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .stats-section h3 {
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- Login -->
+    <div id="loginScreen" class="login-container">
+        <h1>ProdStack</h1>
+        <input type="password" id="passwordInput" class="password-field" placeholder="password (....)" autocomplete="off">
+        <button class="login-btn" id="loginBtn">Login</button>
+        <div id="loginError" class="error-message hidden">Wrong password (LAST 2 DIGITS ARE 22)</div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboardMain" class="dashboard hidden">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="dashboard-title">⚡ ProdStack</div>
+            <div class="menu-container">
+                <button class="menu-btn" id="menuBtn">☰ Menu</button>
+                <div id="menuDropdown" class="menu-dropdown hidden">
+                    <div class="menu-item" id="viewFullStatsBtn">📊 Complete Dashboard Stats</div>
+                    <div class="menu-item" id="viewMainStatsBtn">📈 Main Counters Only</div>
+                    <div class="menu-item" id="viewOptionalStatsBtn">📊 Quick Counters Stats</div>
+                    <div class="menu-item" id="viewProgressBtn">🏆 Top 10 Progress</div>
+                    <div class="menu-item" id="resetCountsBtn">🔄 Reset All Counts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left: Main Counters -->
+            <div class="left-column">
+                <div class="column-header">
+                    <h2>Main Counters (8x4)</h2>
+                    <button class="menu-btn" id="showAddModalBtn" style="padding: 0.3rem 1rem;">+ Add</button>
+                </div>
+                <div id="counterGrid" class="main-counters-grid"></div>
+            </div>
+
+            <!-- Right: Progress + Optional -->
+            <div class="right-column">
+                <!-- Progress -->
+                <div class="progress-section">
+                    <h2 style="color: #94a3b8;">🏆 Top 10 Progress</h2>
+                    <div class="chart-container" id="chartContainer"></div>
+                </div>
+
+                <!-- Optional - 5 EDITABLE COUNTERS -->
+                <div class="optional-section">
+                    <div class="optional-header">
+                        <h2>📌 Quick Counters (5)</h2>
+                        <div class="optional-controls">
+                            <input type="text" id="optionalNameInput" placeholder="Edit selected name">
+                            <button id="updateSelectedOptional">Update Name</button>
+                        </div>
+                    </div>
+                    <div id="optionalGrid" class="optional-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Popup -->
+    <div class="notes-popup-trigger">
+        <div class="notes-bubble" id="notesBubble">📝</div>
+        <div class="notes-popup" id="notesPopup">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <h3 style="color: white;">Notes (max 5)</h3>
+                <button class="add-note-btn" id="addNoteBtn">+ New</button>
+            </div>
+            <div class="notes-tabs" id="notesTabs"></div>
+            <div class="note-editor">
+                <textarea id="noteContent" placeholder="Write your note..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Counter Modal -->
+    <div id="addModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Counter</h2>
+                <button class="close-modal" id="closeModalBtn">✕</button>
+            </div>
+            <input type="text" id="counterNameInput" placeholder="Counter name" style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 50px; color: white; margin-bottom: 1rem;">
+            <div style="color: white; margin-bottom: 0.5rem;">Pick Color:</div>
+            <div class="color-palette" id="colorPalette"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="login-btn" id="saveCounterBtn" style="background: #3b82f6;">Create</button>
+                <button class="login-btn" id="cancelModalBtn" style="background: #475569;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Main Counter Modal -->
+    <div id="editMainModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Main Counter</h2>
+                <button class="close-modal" id="closeEditMainModal">✕</button>
+            </div>
+            <input type="hidden" id="editMainId">
+            <input type="text" id="editMainName" placeholder="Counter name" style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 50px; color: white; margin-bottom: 1rem;">
+            <div style="color: white; margin-bottom: 0.5rem;">Pick Color:</div>
+            <div class="color-palette" id="editMainColorPalette"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="login-btn" id="saveEditMainBtn" style="background: #3b82f6;">Save Changes</button>
+                <button class="login-btn" id="cancelEditMainBtn" style="background: #475569;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Optional Counter Modal -->
+    <div id="editOptionalModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Quick Counter</h2>
+                <button class="close-modal" id="closeEditOptionalModal">✕</button>
+            </div>
+            <input type="hidden" id="editOptionalId">
+            <input type="text" id="editOptionalName" placeholder="Counter name" style="width: 100%; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 50px; color: white; margin-bottom: 1rem;">
+            <div style="color: white; margin-bottom: 0.5rem;">Pick Color:</div>
+            <div class="color-palette" id="editOptionalColorPalette"></div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="login-btn" id="saveEditOptionalBtn" style="background: #3b82f6;">Save Changes</button>
+                <button class="login-btn" id="cancelEditOptionalBtn" style="background: #475569;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Modal -->
+    <div id="statsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="statsModalTitle">Complete Dashboard Statistics</h2>
+                <button class="close-modal" id="closeStatsModal">✕</button>
+            </div>
+            <div id="statsContent" style="color: white;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const VALID_PASSWORD = "1122";
+
+        // Data
+        let counters = [];
+        
+        // 5 EDITABLE optional counters with colors
+        let optionalCounters = [
+            { id: 'opt1', name: 'Quick 1', value: 0, color: '#3b82f6' },
+            { id: 'opt2', name: 'Quick 2', value: 0, color: '#f97316' },
+            { id: 'opt3', name: 'Quick 3', value: 0, color: '#10b981' },
+            { id: 'opt4', name: 'Quick 4', value: 0, color: '#8b5cf6' },
+            { id: 'opt5', name: 'Quick 5', value: 0, color: '#ef4444' }
+        ];
+        
+        let notes = [{ id: Date.now(), title: 'Note 1', content: '' }];
+        let selectedOptionalId = 'opt1';
+
+        // Colors
+        const colorPalette = [
+            '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e',
+            '#10b981', '#14b8a6', '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1',
+            '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e', '#64748b',
+            '#475569', '#334155', '#1e293b', '#0f172a', '#111827', '#1f2937',
+            '#374151', '#4b5563', '#6b7280', '#9ca3af', '#d1d5db'
+        ];
+
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboard = document.getElementById('dashboardMain');
+        const loginBtn = document.getElementById('loginBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuDropdown = document.getElementById('menuDropdown');
+        const counterGrid = document.getElementById('counterGrid');
+        const optionalGrid = document.getElementById('optionalGrid');
+        const chartContainer = document.getElementById('chartContainer');
+        const optionalNameInput = document.getElementById('optionalNameInput');
+        const updateSelectedOptional = document.getElementById('updateSelectedOptional');
+        const notesBubble = document.getElementById('notesBubble');
+        const notesPopup = document.getElementById('notesPopup');
+        const notesTabs = document.getElementById('notesTabs');
+        const noteContent = document.getElementById('noteContent');
+        const addNoteBtn = document.getElementById('addNoteBtn');
+        const addModal = document.getElementById('addModal');
+        const editMainModal = document.getElementById('editMainModal');
+        const editOptionalModal = document.getElementById('editOptionalModal');
+        const statsModal = document.getElementById('statsModal');
+        const closeStatsModal = document.getElementById('closeStatsModal');
+
+        // Load
+        function loadFromStorage() {
+            try {
+                const saved = localStorage.getItem('counters');
+                if (saved) counters = JSON.parse(saved);
+                
+                const savedOptional = localStorage.getItem('optional');
+                if (savedOptional) {
+                    const loaded = JSON.parse(savedOptional);
+                    // Always keep 5, just update values and names
+                    for (let i = 0; i < 5; i++) {
+                        if (loaded[i]) {
+                            optionalCounters[i].name = loaded[i].name || `Quick ${i+1}`;
+                            optionalCounters[i].value = loaded[i].value || 0;
+                            if (loaded[i].color) optionalCounters[i].color = loaded[i].color;
+                        }
+                    }
+                }
+                
+                const savedNotes = localStorage.getItem('notes');
+                if (savedNotes) notes = JSON.parse(savedNotes);
+            } catch (e) {}
+            
+            counters = Array.isArray(counters) ? counters : [];
+        }
+
+        // Save
+        function saveToStorage() {
+            localStorage.setItem('counters', JSON.stringify(counters));
+            localStorage.setItem('optional', JSON.stringify(optionalCounters));
+            localStorage.setItem('notes', JSON.stringify(notes));
+        }
+
+        // Login
+        function login() {
+            if (passwordInput.value === VALID_PASSWORD) {
+                loginScreen.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                loadFromStorage();
+                renderAll();
+                renderNotes();
+                sessionStorage.setItem('auth', 'true');
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        }
+
+        // Check session
+        if (sessionStorage.getItem('auth') === 'true') {
+            loginScreen.classList.add('hidden');
+            dashboard.classList.remove('hidden');
+            loadFromStorage();
+            renderAll();
+            renderNotes();
+        }
+
+        // Render all
+        function renderAll() {
+            renderCounters();
+            renderOptional();
+            renderChart();
+        }
+
+        // Main counters
+        function renderCounters() {
+            if (!counters.length) {
+                counterGrid.innerHTML = '<div style="color: #94a3b8; grid-column: span 8; text-align: center; padding: 2rem;">✨ Add some counters</div>';
+                return;
+            }
+            let html = '';
+            counters.forEach(c => {
+                const borderColor = c.color || '#3b82f6';
+                html += `
+                    <div class="counter-card" data-id="${c.id}" style="border-color: ${borderColor}">
+                        <div class="counter-name" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</div>
+                        <div class="counter-value" style="color: ${borderColor}">${c.value}</div>
+                        <button class="btn-plus" style="background: ${borderColor}" data-id="${c.id}">+</button>
+                        <button class="btn-minus" data-id="${c.id}">−</button>
+                        <div class="card-actions">
+                            <button class="btn-edit" data-id="${c.id}">✎</button>
+                            <button class="btn-reset" data-id="${c.id}">↻</button>
+                            <button class="btn-delete" data-id="${c.id}">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+            counterGrid.innerHTML = html;
+        }
+
+        // Optional - 5 EDITABLE COUNTERS with colors
+        function renderOptional() {
+            let html = '';
+            optionalCounters.forEach(c => {
+                html += `
+                    <div class="optional-item" data-id="${c.id}" style="border-color: ${c.color}">
+                        <div class="counter-name" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</div>
+                        <div class="counter-value" style="color: ${c.color}">${c.value}</div>
+                        <button class="btn-plus" style="background: ${c.color}" data-optional="${c.id}">+</button>
+                        <button class="btn-minus" data-optional="${c.id}">−</button>
+                        <div class="optional-actions">
+                            <button class="optional-edit" data-optional="${c.id}">✎ Edit</button>
+                            <button class="optional-color" data-optional="${c.id}">🎨 Color</button>
+                            <button class="optional-reset" data-optional="${c.id}">↻ Reset</button>
+                        </div>
+                    </div>
+                `;
+            });
+            optionalGrid.innerHTML = html;
+            optionalNameInput.value = optionalCounters.find(c => c.id === selectedOptionalId)?.name || '';
+        }
+
+        // Chart
+        function renderChart() {
+            if (!counters.length) {
+                chartContainer.innerHTML = '<div style="color: #94a3b8;">No data</div>';
+                return;
+            }
+            const top = [...counters].sort((a,b) => b.value - a.value).slice(0, 10);
+            const max = Math.max(...top.map(c => c.value), 1);
+            let html = '';
+            top.forEach(c => {
+                html += `
+                    <div class="chart-bar">
+                        <div class="chart-label" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</div>
+                        <div class="chart-progress"><div class="progress-fill" style="width: ${(c.value/max)*100}%; background: ${c.color || '#3b82f6'}"></div></div>
+                        <div class="chart-value" style="color: ${c.color || '#3b82f6'}">${c.value}</div>
+                    </div>
+                `;
+            });
+            chartContainer.innerHTML = html;
+        }
+
+        // Notes
+        function renderNotes() {
+            let tabs = '';
+            notes.slice(0, 5).forEach(n => {
+                tabs += `
+                    <div class="note-tab ${currentNoteId === n.id ? 'active' : ''}" data-id="${n.id}">
+                        📝 <input value="${escapeHtml(n.title)}" class="note-title" style="width:50px; background:transparent; border:none; color:inherit;" data-id="${n.id}">
+                        <button class="delete-note" data-id="${n.id}">✕</button>
+                    </div>
+                `;
+            });
+            notesTabs.innerHTML = tabs;
+            
+            if (!currentNoteId && notes.length) currentNoteId = notes[0].id;
+            const current = notes.find(n => n.id === currentNoteId);
+            if (current) noteContent.value = current.content;
+            
+            addNoteBtn.style.opacity = notes.length >= 5 ? '0.5' : '1';
+            addNoteBtn.style.cursor = notes.length >= 5 ? 'not-allowed' : 'pointer';
+        }
+
+        // Color palette builder
+        function buildColorPalette(containerId, selectedCallback, initialColor = null) {
+            let html = '';
+            colorPalette.forEach(color => {
+                const selected = color === initialColor ? 'selected' : '';
+                html += `<div class="color-swatch ${selected}" style="background:${color};" data-color="${color}"></div>`;
+            });
+            document.getElementById(containerId).innerHTML = html;
+            
+            document.querySelectorAll(`#${containerId} .color-swatch`).forEach(s => {
+                s.addEventListener('click', () => {
+                    document.querySelectorAll(`#${containerId} .color-swatch`).forEach(sw => sw.classList.remove('selected'));
+                    s.classList.add('selected');
+                    if (selectedCallback) selectedCallback(s.dataset.color);
+                });
+            });
+        }
+
+        // Complete Stats
+        function showCompleteStats() {
+            const content = document.getElementById('statsContent');
+            
+            const mainTotal = counters.reduce((sum, c) => sum + c.value, 0);
+            const optionalTotal = optionalCounters.reduce((sum, c) => sum + c.value, 0);
+            const topTen = [...counters].sort((a,b) => b.value - a.value).slice(0, 10);
+            
+            let html = `
+                <div class="stats-grid">
+                    <div class="stats-section">
+                        <h3>📊 Main Counters (${counters.length})</h3>
+                        <div class="stats-list">
+                            ${counters.sort((a,b) => b.value - a.value).map(c => `
+                                <div class="stats-item">
+                                    <span title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</span>
+                                    <span style="color: ${c.color || '#60a5fa'};">${c.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #334155;">
+                            <strong>Total: ${mainTotal}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-section">
+                        <h3>📌 Quick Counters (5)</h3>
+                        <div class="stats-list">
+                            ${optionalCounters.sort((a,b) => b.value - a.value).map(c => `
+                                <div class="stats-item">
+                                    <span title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</span>
+                                    <span style="color: ${c.color};">${c.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #334155;">
+                            <strong>Total: ${optionalTotal}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-section" style="grid-column: span 2;">
+                        <h3>🏆 Top 10 Counters</h3>
+                        <div class="stats-list">
+                            ${topTen.map((c, i) => `
+                                <div class="stats-item">
+                                    <span>${i+1}. ${escapeHtml(c.name)}</span>
+                                    <span style="color: ${c.color || '#f59e0b'};">${c.value}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="stats-section" style="grid-column: span 2;">
+                        <h3>📈 Summary</h3>
+                        <div style="display: flex; justify-content: space-around; padding: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="color: #94a3b8;">Main Total</div>
+                                <div style="font-size: 2rem; color: #60a5fa;">${mainTotal}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="color: #94a3b8;">Quick Total</div>
+                                <div style="font-size: 2rem; color: #f97316;">${optionalTotal}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="color: #94a3b8;">Grand Total</div>
+                                <div style="font-size: 2rem; color: #8b5cf6;">${mainTotal + optionalTotal}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('statsModalTitle').innerText = '📊 Complete Dashboard Statistics';
+            content.innerHTML = html;
+            statsModal.classList.remove('hidden');
+        }
+
+        // Show main stats
+        function showMainStats() {
+            const content = document.getElementById('statsContent');
+            let html = '<div class="stats-section"><h3>Main Counters</h3><div class="stats-list">';
+            counters.sort((a,b) => b.value - a.value).forEach(c => {
+                html += `<div class="stats-item"><span>${escapeHtml(c.name)}</span><span style="color: ${c.color || '#60a5fa'};">${c.value}</span></div>`;
+            });
+            html += '</div></div>';
+            document.getElementById('statsModalTitle').innerText = '📈 Main Counters Statistics';
+            content.innerHTML = html;
+            statsModal.classList.remove('hidden');
+        }
+
+        // Show optional stats
+        function showOptionalStats() {
+            const content = document.getElementById('statsContent');
+            let html = '<div class="stats-section"><h3>Quick Counters (5)</h3><div class="stats-list">';
+            optionalCounters.sort((a,b) => b.value - a.value).forEach(c => {
+                html += `<div class="stats-item"><span>${escapeHtml(c.name)}</span><span style="color: ${c.color};">${c.value}</span></div>`;
+            });
+            html += '</div></div>';
+            document.getElementById('statsModalTitle').innerText = '📊 Quick Counters Statistics';
+            content.innerHTML = html;
+            statsModal.classList.remove('hidden');
+        }
+
+        // Show top 10
+        function showTop10() {
+            const content = document.getElementById('statsContent');
+            const top = [...counters].sort((a,b) => b.value - a.value).slice(0, 10);
+            let html = '<div class="stats-section"><h3>Top 10 Counters</h3><div class="stats-list">';
+            top.forEach((c, i) => {
+                html += `<div class="stats-item"><span>${i+1}. ${escapeHtml(c.name)}</span><span style="color: ${c.color || '#f59e0b'};">${c.value}</span></div>`;
+            });
+            html += '</div></div>';
+            document.getElementById('statsModalTitle').innerText = '🏆 Top 10 Progress';
+            content.innerHTML = html;
+            statsModal.classList.remove('hidden');
+        }
+
+        // Events
+        loginBtn.addEventListener('click', login);
+        passwordInput.addEventListener('keypress', e => e.key === 'Enter' && login());
+
+        menuBtn.addEventListener('click', () => menuDropdown.classList.toggle('hidden'));
+        document.addEventListener('click', e => {
+            if (!menuBtn.contains(e.target)) menuDropdown.classList.add('hidden');
+        });
+
+        document.getElementById('viewFullStatsBtn').addEventListener('click', () => {
+            menuDropdown.classList.add('hidden');
+            showCompleteStats();
+        });
+
+        document.getElementById('viewMainStatsBtn').addEventListener('click', () => {
+            menuDropdown.classList.add('hidden');
+            showMainStats();
+        });
+
+        document.getElementById('viewOptionalStatsBtn').addEventListener('click', () => {
+            menuDropdown.classList.add('hidden');
+            showOptionalStats();
+        });
+
+        document.getElementById('viewProgressBtn').addEventListener('click', () => {
+            menuDropdown.classList.add('hidden');
+            showTop10();
+        });
+
+        document.getElementById('resetCountsBtn').addEventListener('click', () => {
+            menuDropdown.classList.add('hidden');
+            if (confirm('Reset all counts?')) {
+                counters.forEach(c => c.value = 0);
+                optionalCounters.forEach(c => c.value = 0);
+                saveToStorage();
+                renderAll();
+            }
+        });
+
+        // Add counter
+        document.getElementById('showAddModalBtn').addEventListener('click', () => {
+            let selectedAddColor = colorPalette[0];
+            buildColorPalette('colorPalette', (color) => {
+                selectedAddColor = color;
+            }, selectedAddColor);
+            
+            document.getElementById('counterNameInput').value = '';
+            
+            // Override save to use selected color
+            const saveBtn = document.getElementById('saveCounterBtn');
+            const originalClick = saveBtn.onclick;
+            saveBtn.onclick = () => {
+                const name = document.getElementById('counterNameInput').value.trim() || 'counter';
+                counters.push({
+                    id: Date.now() + Math.random(),
+                    name: name,
+                    color: selectedAddColor,
+                    value: 0
+                });
+                saveToStorage();
+                renderAll();
+                addModal.classList.add('hidden');
+            };
+            
+            addModal.classList.remove('hidden');
+        });
+
+        document.getElementById('cancelModalBtn').addEventListener('click', () => addModal.classList.add('hidden'));
+        document.getElementById('closeModalBtn').addEventListener('click', () => addModal.classList.add('hidden'));
+
+        // Edit main counter
+        function openEditMainModal(id, name, color) {
+            let selectedEditColor = color || colorPalette[0];
+            document.getElementById('editMainId').value = id;
+            document.getElementById('editMainName').value = name;
+            
+            buildColorPalette('editMainColorPalette', (color) => {
+                selectedEditColor = color;
+            }, selectedEditColor);
+            
+            const saveBtn = document.getElementById('saveEditMainBtn');
+            saveBtn.onclick = () => {
+                const newName = document.getElementById('editMainName').value.trim();
+                const counter = counters.find(c => c.id == id);
+                if (counter) {
+                    counter.name = newName || counter.name;
+                    counter.color = selectedEditColor;
+                    saveToStorage();
+                    renderAll();
+                }
+                editMainModal.classList.add('hidden');
+            };
+            
+            editMainModal.classList.remove('hidden');
+        }
+
+        // Edit optional counter
+        function openEditOptionalModal(id, name, color) {
+            let selectedEditColor = color || colorPalette[0];
+            document.getElementById('editOptionalId').value = id;
+            document.getElementById('editOptionalName').value = name;
+            
+            buildColorPalette('editOptionalColorPalette', (color) => {
+                selectedEditColor = color;
+            }, selectedEditColor);
+            
+            const saveBtn = document.getElementById('saveEditOptionalBtn');
+            saveBtn.onclick = () => {
+                const newName = document.getElementById('editOptionalName').value.trim();
+                const counter = optionalCounters.find(c => c.id === id);
+                if (counter) {
+                    counter.name = newName || counter.name;
+                    counter.color = selectedEditColor;
+                    saveToStorage();
+                    renderAll();
+                }
+                editOptionalModal.classList.add('hidden');
+            };
+            
+            editOptionalModal.classList.remove('hidden');
+        }
+
+        // Close modals
+        document.getElementById('closeEditMainModal').addEventListener('click', () => editMainModal.classList.add('hidden'));
+        document.getElementById('cancelEditMainBtn').addEventListener('click', () => editMainModal.classList.add('hidden'));
+        document.getElementById('closeEditOptionalModal').addEventListener('click', () => editOptionalModal.classList.add('hidden'));
+        document.getElementById('cancelEditOptionalBtn').addEventListener('click', () => editOptionalModal.classList.add('hidden'));
+
+        // Update selected optional name
+        updateSelectedOptional.addEventListener('click', () => {
+            const name = optionalNameInput.value.trim();
+            if (name && selectedOptionalId) {
+                const c = optionalCounters.find(c => c.id === selectedOptionalId);
+                if (c) {
+                    c.name = name;
+                    saveToStorage();
+                    renderOptional();
+                }
+            }
+        });
+
+        // Notes
+        notesBubble.addEventListener('click', () => notesPopup.classList.toggle('active'));
+        document.addEventListener('click', e => {
+            if (!notesBubble.contains(e.target) && !notesPopup.contains(e.target)) {
+                notesPopup.classList.remove('active');
+            }
+        });
+
+        addNoteBtn.addEventListener('click', () => {
+            if (notes.length >= 5) return;
+            notes.push({ id: Date.now(), title: `Note ${notes.length+1}`, content: '' });
+            currentNoteId = notes[notes.length-1].id;
+            saveToStorage();
+            renderNotes();
+        });
+
+        noteContent.addEventListener('input', () => {
+            const n = notes.find(n => n.id === currentNoteId);
+            if (n) {
+                n.content = noteContent.value;
+                saveToStorage();
+            }
+        });
+
+        // Global clicks
+        document.addEventListener('click', e => {
+            // Main counter buttons
+            if (e.target.classList.contains('btn-plus') && e.target.dataset.id) {
+                const c = counters.find(c => c.id == e.target.dataset.id);
+                if (c) { c.value++; saveToStorage(); renderAll(); }
+            }
+            if (e.target.classList.contains('btn-minus') && e.target.dataset.id) {
+                const c = counters.find(c => c.id == e.target.dataset.id);
+                if (c && c.value > 0) { c.value--; saveToStorage(); renderAll(); }
+            }
+            if (e.target.classList.contains('btn-reset') && e.target.dataset.id) {
+                const c = counters.find(c => c.id == e.target.dataset.id);
+                if (c) { c.value = 0; saveToStorage(); renderAll(); }
+            }
+            if (e.target.classList.contains('btn-edit') && e.target.dataset.id) {
+                const c = counters.find(c => c.id == e.target.dataset.id);
+                if (c) openEditMainModal(c.id, c.name, c.color);
+            }
+            if (e.target.classList.contains('btn-delete') && e.target.dataset.id) {
+                if (confirm('Delete this counter?')) {
+                    counters = counters.filter(c => c.id != e.target.dataset.id);
+                    saveToStorage(); renderAll();
+                }
+            }
+
+            // Optional counter buttons
+            if (e.target.classList.contains('btn-plus') && e.target.dataset.optional) {
+                const c = optionalCounters.find(c => c.id == e.target.dataset.optional);
+                if (c) { c.value++; saveToStorage(); renderOptional(); renderChart(); }
+            }
+            if (e.target.classList.contains('btn-minus') && e.target.dataset.optional) {
+                const c = optionalCounters.find(c => c.id == e.target.dataset.optional);
+                if (c && c.value > 0) { c.value--; saveToStorage(); renderOptional(); renderChart(); }
+            }
+            if (e.target.classList.contains('optional-reset') && e.target.dataset.optional) {
+                const c = optionalCounters.find(c => c.id == e.target.dataset.optional);
+                if (c) { c.value = 0; saveToStorage(); renderOptional(); renderChart(); }
+            }
+            if (e.target.classList.contains('optional-edit') && e.target.dataset.optional) {
+                const id = e.target.dataset.optional;
+                const c = optionalCounters.find(c => c.id === id);
+                if (c) openEditOptionalModal(c.id, c.name, c.color);
+            }
+            if (e.target.classList.contains('optional-color') && e.target.dataset.optional) {
+                const id = e.target.dataset.optional;
+                const c = optionalCounters.find(c => c.id === id);
+                if (c) openEditOptionalModal(c.id, c.name, c.color);
+            }
+
+            // Select optional item
+            if (e.target.closest('.optional-item') && !e.target.classList.contains('btn-plus') && !e.target.classList.contains('btn-minus') && !e.target.classList.contains('optional-edit') && !e.target.classList.contains('optional-color') && !e.target.classList.contains('optional-reset')) {
+                const id = e.target.closest('.optional-item').dataset.id;
+                selectedOptionalId = id;
+                const c = optionalCounters.find(c => c.id === id);
+                if (c) optionalNameInput.value = c.name;
+                renderOptional();
+            }
+
+            // Note tab selection
+            if (e.target.closest('.note-tab') && !e.target.classList.contains('delete-note')) {
+                const id = Number(e.target.closest('.note-tab').dataset.id);
+                currentNoteId = id;
+                renderNotes();
+            }
+
+            // Delete note
+            if (e.target.classList.contains('delete-note')) {
+                const id = Number(e.target.dataset.id);
+                if (notes.length > 1) {
+                    notes = notes.filter(n => n.id !== id);
+                    if (currentNoteId === id) currentNoteId = notes[0].id;
+                    saveToStorage();
+                    renderNotes();
+                }
+            }
+        });
+
+        // Note title edit
+        document.addEventListener('blur', e => {
+            if (e.target.classList.contains('note-title')) {
+                const id = Number(e.target.dataset.id);
+                const n = notes.find(n => n.id === id);
+                if (n) {
+                    n.title = e.target.value.trim() || 'Note';
+                    saveToStorage();
+                    renderNotes();
+                }
+            }
+        }, true);
+
+        // Close stats modal
+        closeStatsModal.addEventListener('click', () => statsModal.classList.add('hidden'));
+
+        // Helper
+        function escapeHtml(s) {
+            if (!s) return '';
+            return String(s).replace(/[&<>"]/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+            }[c]));
+        }
+
+        let currentNoteId = null;
+    })();
+</script>
+
+<!-- Backup / Restore Panel (added) -->
+<div id="backupPanel" style="position:fixed;bottom:15px;right:15px;background:#111;color:#fff;padding:10px 12px;border-radius:8px;font-family:Arial;font-size:12px;z-index:99999;box-shadow:0 4px 10px rgba(0,0,0,0.4);">
+  <button onclick="downloadBackup()" style="margin-right:6px;padding:6px 8px;cursor:pointer;">💾 Backup</button>
+  <button onclick="document.getElementById('restoreInput').click()" style="padding:6px 8px;cursor:pointer;">📂 Restore</button>
+  <input type="file" id="restoreInput" style="display:none" accept=".json">
+</div>
+
+<script>
+function downloadBackup(){
+    const data = JSON.stringify(localStorage);
+    const blob = new Blob([data], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'counter_backup.json';
+    a.click();
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    const input = document.getElementById("restoreInput");
+    if(!input) return;
+    input.addEventListener("change", function(e){
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt){
+            try{
+                const data = JSON.parse(evt.target.result);
+                for(const key in data){
+                    localStorage.setItem(key, data[key]);
+                }
+                alert("Backup restored. Reloading page.");
+                location.reload();
+            }catch(err){
+                alert("Invalid backup file.");
+            }
+        };
+        reader.readAsText(file);
+    });
+});
+</script>
+
+</body>
+</html>
